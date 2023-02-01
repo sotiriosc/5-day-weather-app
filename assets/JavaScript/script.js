@@ -1,37 +1,37 @@
-var Key = "ced7c62dff2082135fe4738b8061ec22";
+var key = "ced7c62dff2082135fe4738b8061ec22";
 var city = "Toronto";
 
-var date = moment().format('dddd, MMMM do YYYY');
-var dateTime = moment.format('YYYY-MM-DD HH:MM:SS')
+//Grabs the current time and date
+var date = moment().format('dddd, MMMM Do YYYY');
+var dateTime = moment().format('YYYY-MM-DD HH:MM:SS')
 
 var cityHist = [];
-// Saves text value of search in local sotrage
-$('.search').on("click", function(event) {
-    event.preventDefault();
-    city = $(this).parent('.btnPar').siblings('.textVal').val().trim();
-    if (city === "") {
-        return;
-    };
-    cityHist.push(city);
+//Will save the text value of the search and save it to an array and storage
+$('.search').on("click", function (event) {
+	event.preventDefault();
+	city = $(this).parent('.btnPar').siblings('.textVal').val().trim();
+	if (city === "") {
+		return;
+	};
+	cityHist.push(city);
 
-    localStorage.setItem('city', JSON.stringify(cityHist));
-    fiveForecastEl.empty();
-    getHistory();
-    getWeatherToday();
+	localStorage.setItem('city', JSON.stringify(cityHist));
+	fiveForecastEl.empty();
+	getHistory();
+	getWeatherToday();
 });
 
-// Creates buttons based on search history
-
-var constHistEl = $('.cityHist');
+//Will create buttons based on search history 
+var contHistEl = $('.cityHist');
 function getHistory() {
-    constHistEl.empty();
+	contHistEl.empty();
 
-    for (let i = 0; i < cityHist.length; i++) {
+	for (let i = 0; i < cityHist.length; i++) {
 
-        var rowEl = $('<row>');
-        var btnEl = $('<button>').text('${cityHist[i]}');
+		var rowEl = $('<row>');
+		var btnEl = $('<button>').text(`${cityHist[i]}`)
 
-        rowEl.addClass('row histBtnRow');
+		rowEl.addClass('row histBtnRow');
 		btnEl.addClass('btn btn-outline-secondary histBtn');
 		btnEl.attr('type', 'button');
 
@@ -49,27 +49,25 @@ function getHistory() {
 	});
 };
 
-// Selects Today card
-
+//Grab the main 'Today' card body.
 var cardTodayBody = $('.cardBodyToday')
+//Applies the weather data to the today card and then launches the five day forecast
+function getWeatherToday() {
+	var getUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${key}`;
 
-// Apply weather data to card and launches 5 day weather forecast
-function getWeatherToday () {
-    var getUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${key}`;
+	$(cardTodayBody).empty();
 
-    $(cardTodayBody).empty();
-
-    $.ajax({
-        url: getUrlCurrent,
+	$.ajax({
+		url: getUrlCurrent,
 		method: 'GET',
-    }).then(function (response) {
-        $('cardTodayCityName').text(response.name);
-        $('.cardTodayDate').text(date);
-        // Icons
-        $('.icons').attr('src', `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`);
-        // Temperature
-        var pEl = $('<p>').text(`Temperature: ${response.main.temp} °F`)
-        cardTodayBody.append(pEl);
+	}).then(function (response) {
+		$('.cardTodayCityName').text(response.name);
+		$('.cardTodayDate').text(date);
+		//Icons
+		$('.icons').attr('src', `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`);
+		// Temperature
+		var pEl = $('<p>').text(`Temperature: ${response.main.temp} °F`);
+		cardTodayBody.append(pEl);
 		//Feels Like
 		var pElTemp = $('<p>').text(`Feels Like: ${response.main.feels_like} °F`);
 		cardTodayBody.append(pElTemp);
@@ -85,7 +83,7 @@ function getWeatherToday () {
 		var cityLat = response.coord.lat;
 		// console.log(cityLat);
 
-        var getUrlUvi = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&exclude=hourly,daily,minutely&appid=${key}`;
+		var getUrlUvi = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&exclude=hourly,daily,minutely&appid=${key}`;
 
 		$.ajax({
 			url: getUrlUvi,
@@ -112,7 +110,7 @@ function getWeatherToday () {
 	});
 	getFiveDayForecast();
 };
-    
+
 var fiveForecastEl = $('.fiveForecast');
 
 function getFiveDayForecast() {
