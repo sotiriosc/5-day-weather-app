@@ -53,7 +53,7 @@ function getHistory() {
 var cardTodayBody = $('.cardBodyToday')
 //Applies the weather data to the today card and then launches the five day forecast
 function getWeatherToday() {
-	var getUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${key}`;
+	var getUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${key}`;
 
 	$(cardTodayBody).empty();
 
@@ -66,10 +66,10 @@ function getWeatherToday() {
 		//Icons
 		$('.icons').attr('src', `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`);
 		// Temperature
-		var pEl = $('<p>').text(`Temperature: ${response.main.temp} °F`);
+		var pEl = $('<p>').text(`Temperature: ${response.main.temp} °C`);
 		cardTodayBody.append(pEl);
 		//Feels Like
-		var pElTemp = $('<p>').text(`Feels Like: ${response.main.feels_like} °F`);
+		var pElTemp = $('<p>').text(`Feels Like: ${response.main.feels_like} °C`);
 		cardTodayBody.append(pElTemp);
 		//Humidity
 		var pElHumid = $('<p>').text(`Humidity: ${response.main.humidity} %`);
@@ -114,7 +114,7 @@ function getWeatherToday() {
 var fiveForecastEl = $('.fiveForecast');
 
 function getFiveDayForecast() {
-	var getUrlFiveDay = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=${key}`;
+	var getUrlFiveDay = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${key}`;
 
 	$.ajax({
 		url: getUrlFiveDay,
@@ -122,7 +122,7 @@ function getFiveDayForecast() {
 	}).then(function (response) {
 		var fiveDayArray = response.list;
 		var myWeather = [];
-		//Made a object that would allow for easier data read
+		
 		$.each(fiveDayArray, function (index, value) {
 			testObj = {
 				date: value.dt_txt.split(' ')[0],
@@ -161,10 +161,10 @@ function getFiveDayForecast() {
 			divElBody.append(divElIcon);
 
 			//Temp
-			var pElTemp = $('<p>').text(`Temperature: ${myWeather[i].temp} °F`);
+			var pElTemp = $('<p>').text(`Temperature: ${myWeather[i].temp} °C`);
 			divElBody.append(pElTemp);
 			//Feels Like
-			var pElFeel = $('<p>').text(`Feels Like: ${myWeather[i].feels_like} °F`);
+			var pElFeel = $('<p>').text(`Feels Like: ${myWeather[i].feels_like} °C`);
 			divElBody.append(pElFeel);
 			//Humidity
 			var pElHumid = $('<p>').text(`Humidity: ${myWeather[i].humidity} %`);
